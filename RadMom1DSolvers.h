@@ -73,8 +73,7 @@ void ComputeNorms(RadMom1D_UniformMesh<cState, pState> *Soln,
  ********************************************************/
 
 template<class cState, class pState>
-int RadMom1DSolver(const char *Input_File_Name_ptr,
-                   int batch_flag) {
+int RadMom1DSolver(const char *Input_File_Name_ptr) {
 
   /********************************************************
    * Local variable declarations.                         *
@@ -127,10 +126,9 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
   /* Allocate memory for 1D RadMom equation solution on
      uniform mesh. */
 
-  if (! batch_flag){
-    cout << "\n Creating memory for RadMom1D solution variables.";
-    cout.flush();
-  }
+  cout << "\n Creating memory for RadMom1D solution variables.";
+  cout.flush();
+
   Soln_ptr=Allocate<cState, pState>(Soln_ptr, Input_Parameters);
 
   if (Soln_ptr == NULL){
@@ -141,10 +139,9 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
 
   /* Create uniform mesh. */
 
-  if (! batch_flag){
-    cout << "\n Creating uniform mesh.";
-    cout.flush();
-  }
+  cout << "\n Creating uniform mesh.";
+  cout.flush();
+
   Grid<cState, pState>(Soln_ptr,
                        Input_Parameters.X_Min,
                        Input_Parameters.X_Max,
@@ -161,17 +158,14 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
 
   /* Initialize the conserved and primitive state
      solution variables. */
+  cout << "\n Prescribing RadMom1D initial data.";
+  cout.flush();
 
-  if (! batch_flag){
-    cout << "\n Prescribing RadMom1D initial data.";
-    cout.flush();
-  }
   ICs<cState, pState>(Soln_ptr, Input_Parameters);
 
-  if (! batch_flag){
-    cout << "\n Prescribing RadMom1D initial boundary conditions data.";
-    cout.flush();
-  }
+  cout << "\n Prescribing RadMom1D initial boundary conditions data.";
+  cout.flush();
+
   BCs<cState, pState>(Soln_ptr, Input_Parameters);
 
   /********************************************************
@@ -187,10 +181,9 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
           (Input_Parameters.Time_Accurate &&
           Input_Parameters.Time_Max >= time)) {
 
-    if (! batch_flag){
-      cout << "\n\n Beginning RadMom1D computations.\n\n";
-      cout.flush();
-    }
+    cout << "\n\n Beginning RadMom1D computations.\n\n";
+    cout.flush();
+
      while (1) {
          /* Determine local and global time steps. */
          dtime = CFL<cState, pState>(Soln_ptr);
@@ -200,13 +193,12 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
           ComputeNorms<cState, pState>(Soln_ptr, residual_l1_norm, residual_l2_norm, residual_max_norm);
 
           //screen
-          if (!batch_flag)
-            Output_Progress_L2norm(number_of_time_steps,
-                                   time*THOUSAND,
-                                   total_cpu_time,
-                                   residual_l2_norm,
-                                   false, //first_step
-                                   50);
+          Output_Progress_L2norm(number_of_time_steps,
+                                 time*THOUSAND,
+                                 total_cpu_time,
+                                 residual_l2_norm,
+                                 false, //first_step
+                                 50);
 
           // CALCULATION CHECK: Check to see if calculations are
           // complete and if so jump of out of this infinite loop.
@@ -244,15 +236,10 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
                                                                  dtime);
 
          if (error_flag) {
-             if (batch_flag) {
-                 cout << "\nPDES++ ERROR: RadMom1D solution error.\n\n";
-		 cout.flush();
-             } else {
-                 cout << "\n PDES++ ERROR: RadMom1D solution error.";
-                 cout << "\n\nPDES++: Execution terminated.\n";
-		 cout.flush();
-             } /* endif */
-             return (error_flag);
+           cout << "\n PDES++ ERROR: RadMom1D solution error.";
+           cout << "\n\nPDES++: Execution terminated.\n";
+           cout.flush();
+           return (error_flag);
          } /* endif */
 
          /* Update time and time step counter. */
@@ -261,18 +248,14 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
 
      } /* endwhile */
 
-     if (!batch_flag) {
-       cout << "\n RadMom1D: Radiation Solver Stats:";
-       cout << "\n RadMom1D: Total CPU time       ====> " << total_cpu_time.min() << " min";
-       // cout << "\n RadMom1D: Total clock time     ====> " << difftime(end_explicit,start_explicit)/60.0 << " min";
-       cout << "\n RadMom1D: Number of Time Steps ====> " << number_of_time_steps;
-       cout << "\n RadMom1D: L1 Norm Residual     ====> " << residual_l1_norm;
-       cout << "\n RadMom1D: L2 Norm Residual     ====> " << residual_l2_norm;
-       cout << "\n RadMom1D: Max Norm Residual     ====> " << residual_max_norm;
-    } else {
-      cout << "\n RadMom1D: Completed after N = " << number_of_time_steps << " steps, "
-	   << " final max norm = " << residual_max_norm << ".";
-    }
+
+     cout << "\n RadMom1D: Radiation Solver Stats:";
+     cout << "\n RadMom1D: Total CPU time       ====> " << total_cpu_time.min() << " min";
+     // cout << "\n RadMom1D: Total clock time     ====> " << difftime(end_explicit,start_explicit)/60.0 << " min";
+     cout << "\n RadMom1D: Number of Time Steps ====> " << number_of_time_steps;
+     cout << "\n RadMom1D: L1 Norm Residual     ====> " << residual_l1_norm;
+     cout << "\n RadMom1D: L2 Norm Residual     ====> " << residual_l2_norm;
+     cout << "\n RadMom1D: Max Norm Residual     ====> " << residual_max_norm;
 
     if (residual_max_norm > Input_Parameters.Min_Residual_Level) {
       cout << "\n RadMom1D ERROR: Failed to converge, Max Norm = " << residual_max_norm << " > Tolerance = " << Input_Parameters.Min_Residual_Level << ".";
@@ -292,21 +275,20 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
      line_number = Input_Parameters.Line_Number;
      if (command_flag == EXECUTE_CODE) {
          // Deallocate memory for 1D RadMom equation solution.
-         if (! batch_flag) cout << "\n Deallocating RadMom1D solution variables.";
+         cout << "\n Deallocating RadMom1D solution variables.";
          Soln_ptr=Deallocate(Soln_ptr);
          // Execute new calculation.
-         if (! batch_flag)  {
-            cout << "\n\n Starting a new calculation.";
-            cout << Input_Parameters << "\n";
-         } /* endif */
+         cout << "\n\n Starting a new calculation.";
+         cout << Input_Parameters << "\n";
+
          goto execute_new_calculation;
 
      } else if (command_flag == TERMINATE_CODE) {
          // Deallocate memory for 1D RadMom equation solution.
-         if (! batch_flag) cout << "\n Deallocating RadMom1D solution variables.";
+         cout << "\n Deallocating RadMom1D solution variables.";
          Soln_ptr=Deallocate(Soln_ptr);
          // Close input data file.
-         if (! batch_flag) cout << "\n\n Closing RADMOM1D input data file.";
+         cout << "\n\n Closing RADMOM1D input data file.";
          Input_Parameters.Close_Input_File();
          // Terminate calculation.
          return (0);
@@ -315,26 +297,22 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
          // Reset maximum time step counter.
          Input_Parameters.Maximum_Number_of_Time_Steps += number_of_time_steps;
          // Continue existing calculation.
-         if (! batch_flag)  {
-            cout << "\n\n Continuing existing calculation.";
-            cout << Input_Parameters << "\n";
-         } /* endif */
+         cout << "\n\n Continuing existing calculation.";
+         cout << Input_Parameters << "\n";
+
          goto continue_existing_calculation;
 
      } else if (command_flag == WRITE_OUTPUT_CODE) {
          // Output solution data.
          Output_File_Name_ptr = Input_Parameters.Output_File_Name;
-         if (! batch_flag)
-           cout << "\n Writing RadMom1D solution to output data file `"
-	        << Output_File_Name_ptr << "'.";
+
+         cout << "\n Writing RadMom1D solution to output data file `"
+              << Output_File_Name_ptr << "'.";
          Output_File.open(Output_File_Name_ptr, ios::out);
          if (Output_File.fail()) {
-            if (batch_flag) {
-               cout << "\nPDES++ ERROR: Unable to open RadMom1D output data file.\n\n";
-            } else {
-               cout << "\n PDES++ ERROR: Unable to open RadMom1D output data file.";
-               cout << "\n\nPDES++: Execution terminated.\n";
-            } /* endif */
+            cout << "\n PDES++ ERROR: Unable to open RadMom1D output data file.";
+            cout << "\n\nPDES++: Execution terminated.\n";
+
             return (1);
          } /* endif */
 
@@ -347,14 +325,10 @@ int RadMom1DSolver(const char *Input_File_Name_ptr,
      } else if (command_flag == INVALID_INPUT_CODE ||
                 command_flag == INVALID_INPUT_VALUE) {
          line_number = -line_number;
-         if (batch_flag) {
-             cout << "\nRadMom1D ERROR: Error reading RadMom1D data at line #"
-	          << -line_number << " of input data file.\n\n";
-         } else {
-             cout << "\nRadMom1D ERROR: Error reading RadMom1D data at line #"
-	          << -line_number  << " of input data file.";
-             cout << "\n\nPDES++: Execution terminated.\n";
-         } /* end if */
+         cout << "\nRadMom1D ERROR: Error reading RadMom1D data at line #"
+              << -line_number  << " of input data file.";
+         cout << "\n\nPDES++: Execution terminated.\n";
+
          return (line_number);
      } /* endif */
   } /* endwhile */

@@ -41,9 +41,7 @@ int main(int num_arg, const char *arg_ptr[]) {
    ********************************************************/
 
   // Command line flags:  
-  int batch_flag,
-      error_flag,
-      file_flag;
+  int error_flag;
 
   // Other local integer variables:
   int i;
@@ -75,9 +73,7 @@ int main(int num_arg, const char *arg_ptr[]) {
    ********************************************************/
 
   /* Initialize command line flags. */
-  batch_flag = 0;
   error_flag = 0;
-  file_flag = 0;
 
   /* Parse and interpret command line arguments.  Note that there
    * are several different possible arguments which are:
@@ -87,7 +83,7 @@ int main(int num_arg, const char *arg_ptr[]) {
   if (num_arg >= 2) {
      for (i = 1; i <= num_arg - 1; ++i) {
       if (strcmp(arg_ptr[i],"-f") == 0) {
-        file_flag = 1;
+
       } else if (strcmp(arg_ptr[i-1], "-f") == 0) {
          Input_File_Name_ptr = arg_ptr[i];
       } else {
@@ -110,25 +106,21 @@ int main(int num_arg, const char *arg_ptr[]) {
    * DISPLAY THE PROGRAM TITLE AND VERSION INFORMATION AS REGUIRED. *
    ******************************************************************/
 
-  if (!batch_flag) {
-     cout << "**********************************************************************************************************" << '\n';
-     cout << '\n' << program_title_ptr << '\n';
-     cout << "Built by Joachim A. R. Sarr " << "\n";
-     cout << '\n' << "**********************************************************************************************************" << '\n';
-     cout.flush();
-  } /* endif */
+  cout << "**********************************************************************************************************" << '\n';
+  cout << '\n' << program_title_ptr << '\n';
+  cout << "Built by Joachim A. R. Sarr " << "\n";
+  cout << '\n' << "**********************************************************************************************************" << '\n';
+  cout.flush();
 
   /***********************************************************  
    * PERFORM REQUIRED CALCULATIONS.                          *
    ***********************************************************/
   if (strcmp(Closure_Type, "M1") == 0 || strcmp(Closure_Type, "P1") == 0) {
      error_flag = RadMom1DSolver<RadMom1D_cState_First_Order,
-                                       RadMom1D_pState_First_Order>(Input_File_Name_ptr,
-                                                                    batch_flag);
+                                       RadMom1D_pState_First_Order>(Input_File_Name_ptr);
  } else if (strcmp(Closure_Type, "P3") == 0 ) {
     error_flag = RadMom1DSolver<RadMom1D_cState_Third_Order,
-                                    RadMom1D_pState_Third_Order>(Input_File_Name_ptr,
-	   			                                  batch_flag);
+                                    RadMom1D_pState_Third_Order>(Input_File_Name_ptr);
  } /* endif */
   
   if (error_flag) {
@@ -139,9 +131,7 @@ int main(int num_arg, const char *arg_ptr[]) {
   /********************************************************  
    * TERMINATE PROGRAM EXECUTION                          *
    ********************************************************/
-
-  if (!batch_flag) 
-     cout << "\n\nRadMom1D: Execution complete.\n";
+  cout << "\n\nRadMom1D: Execution complete.\n";
 
   //Ending properly
   return (0);

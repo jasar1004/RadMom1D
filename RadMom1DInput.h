@@ -421,7 +421,7 @@ void RadMom1D_Input_Parameters<cState,pState>::Get_Next_Input_Control_Parameter(
         while (1) {
             if (buffer[i] == ' ' || buffer[i] == '=' ) break;
             i = i + 1;
-            if (i > strlen(buffer) ) break;
+            if ((size_t) i > strlen(buffer) ) break;
         } /* endwhile */
         buffer[i] = '\0';
     } /* endif */
