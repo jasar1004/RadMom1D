@@ -4,7 +4,6 @@ OTHERDIR_CFD=./CFD
 OTHERDIR_MEDIUM1DSTATE=./Medium1DState
 
 LFLAGS = -g -lstdc++ -Wall -Wextra -lstdc++
-#-liomp5 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lifcore -lpthread
 
 # Objects for Grid
 OBJS_GRID = $(OTHERDIR_GRID)/Cell1D.o
@@ -18,9 +17,6 @@ OBJS_MEDIUM1DSTATE = $(OTHERDIR_MEDIUM1DSTATE)/Medium1DState.o
 # Objects for RadMom1D
 OBJS_RADMOM1D = $(RADMOM1D_DIR)/RadMom1DSolvers.o $(RADMOM1D_DIR)/RadMom1D_Mesh.o $(RADMOM1D_DIR)/RadMom1DInput_First_Order.o $(RADMOM1D_DIR)/RadMom1DInput_Third_Order.o $(RADMOM1D_DIR)/RadMom1DState_First_Order.o $(RADMOM1D_DIR)/RadMom1DState_Third_Order.o
 OBJS_RADMOM1D_EXE = $(RADMOM1D_DIR)/RadMom1D.o
-
-# radMom1D: $(OBJS_CFD) $(OBJS_GRID) $(OBJS_MEDIUM1DSTATE) $(OBJS_RADMOM1D)
-# 		g++ $(LFLAGS) -I RadMom1D.cc -L $(OBJS_RADMOM1D) $(OBJS_CFD) $(OBJS_GRID) $(OBJS_MEDIUM1DSTATE)
 
 # Create the executable for RadMom1D
 radMom1D: $(OBJS_RADMOM1D_EXE) $(OBJS_CFD) $(OBJS_GRID) $(OBJS_MEDIUM1DSTATE) $(OBJS_RADMOM1D)
@@ -64,6 +60,7 @@ Medium1DState.o: $(OTHERDIR_MEDIUM1DSTATE)/Medium1DState.cc
 # Clean all object files in current directory (RadMom1D) and all associated subdirectories
 clean:
 	rm -rf *.o
+	rm -rf radMom1D
 	rm -rf $(OTHERDIR_GRID)/*.o
 	rm -rf $(OTHERDIR_CFD)/*.o
 	rm -rf $(OTHERDIR_MEDIUM1DSTATE)/*.o
