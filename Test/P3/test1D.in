@@ -1,0 +1,139 @@
+#
+# Radiation test case
+#
+########################
+# Set solver parameters
+########################
+Time_Integration_Type=
+Explicit_Euler
+##################################
+# Set solution reconstruction type
+##################################
+Reconstruction_Type=
+Least_Squares
+########################
+# Set moment closure type
+########################
+Moment_Closure_Type=
+P3
+########################
+# Set flux function type
+########################
+Flux_Function_Type=
+HLLE
+Time_Accurate=
+0
+Local_Time_Stepping=
+0
+########################
+# Set limiter type
+########################
+Limiter_Type=
+zero #Venkatakrishnan
+Freeze_Limiter=
+0
+Freeze_Limiter_Residual_Level=
+1.0e-1
+###################################
+# Set residual convergence criteria
+###################################
+Min_Residual_Level=
+1e-6
+###################################
+# Set maximum number of time steps
+###################################
+Maximum_Number_of_Time_Steps =
+5000
+########################
+# Set CFL number
+########################
+CFL_Number=
+0.3
+#########################
+# Set initial conditions
+#########################
+ICs_Intensity_or_Temperature =
+Temperature
+ICs_Type =
+Parallel_Plates
+Case =
+1
+#########################
+# Set number of cells
+#########################
+Number_of_Cells_Idir =
+100
+###########################
+# Set number of ghost cells
+###########################
+Number_of_Ghost_Cells =
+2
+###########################
+# Set wall temperatures
+# [east west]
+###########################
+Wall_Temperature =
+100.0  100.0
+###########################
+# Set wall emissivities
+# [east west]
+###########################
+Wall_Emissivity =
+1.0  1.0
+###########################
+# Set gas temperature
+###########################
+Gas_Temperature =
+1000.0
+################################
+# Set gas absorption model
+################################
+Absorption_Model =
+Gray
+################################
+# Set gas absorption coefficient
+################################
+Absorption_Coefficient =
+2.0
+################################
+# Set gas scattering coefficient
+################################
+Scattering_Coefficient =
+0.0
+################################
+# Set scattering function
+################################
+Scattering_Function =
+Isotropic
+################################
+# Set reference temperature
+################################
+Reference_Temperature =
+500.0
+#########################
+# Set Boundary Conditions
+#########################
+Boundary_Conditions_Specified =
+ON
+BC_East =
+Characteristic #Partial_Moments #Gray_Wall #
+BC_West =
+Characteristic #Partial_Moments #Gray_Wall #
+#######################
+# Set ouput file name
+#######################
+Output_File_Name =
+test1D
+#######################
+# Execute program
+#######################
+Execute
+#######################
+# Write Output file
+#######################
+Write_Output
+Write_Output_Cells
+#######################
+# Terminate program
+#######################
+Terminate
