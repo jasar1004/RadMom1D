@@ -106,7 +106,7 @@ The possible options are:
 -------
 Step 2:
 -------
-In the command line, execute the command "make clean" to clean up all the object files generate from previous compilations of the RadMom1D code.
+In the command line, execute the command "make clean" to clean up all the object files generated from previous compilations of the RadMom1D code.
 
 -------
 Step 3:
