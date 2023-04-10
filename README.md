@@ -125,10 +125,11 @@ Once the code compiled, it can be used along with a given set of inputs to solve
 Tests:
 -------
 In the "Test" directory, some test samples are provided for use with the radMom1D exectutable.
-These tests involves soving the radiative transfer equation using both the M1, P1, and P3 moment closures (see subdirectories "M1", "P1", and "P3" in "Test" directory).
+These tests involve solving the radiative transfer equation using both the M1, P1, and P3 moment closures (see subdirectories "M1", "P1", and "P3" in "Test" directory).
 The input file name associated with each of these test is "test1D.in". The scripts for executing the RadMom1D code can be found in these subdirectories, i.e., M1_Closure_script.sh for M1, P1_Closure_script.sh for P1, and P3_Closure_script.sh for P3 and can be exectuted in the command line using:
 ./M1_Closure_script.sh, or ./P1_Closure_script.sh, or ./P3_Closure_script.sh
 Upon completion of the numerical simulations, an output file "test1D.dat" will be generated.
 
-A Tecplot macro is provided in the "Test" subdirectory which extracts solution profiles for the M1, P1, and P3 closure (Comparisons_E.mcr for the radiative energy density or zeroth-order moment, Comparisons_F.mcr for the radiative heat flux or first-order moment, and Comparisons_Sr.mcr for the radiative source term) and compares them on the same figure.
+A Tecplot macro is provided in the "Test" subdirectory which extracts solution profiles for the M1, P1, and P3 closures (Comparisons_E.mcr for the radiative energy density or zeroth-order moment, Comparisons_F.mcr for the radiative heat flux or first-order moment, and Comparisons_Sr.mcr for the radiative source term) for the purpose of comparing the predictive
+capabilities of the different moment closures.
 
