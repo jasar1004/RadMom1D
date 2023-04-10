@@ -86,7 +86,7 @@ RadMom1D_pState_Third_Order: contains primitive variable solution state class de
 
 RadMom1D_cState_Third_Order: contains conserved variable solution state class definition for third-order moment closures (i.e, P3).
 
-Medium1D_State: contains gas state class definition for a absorbing, scattering participating medium. In particular, it stores radiative properties of the participating medium such as the absorption coefficient and the scattering coefficient. For now, the radiative properties implemented are based on the assumption of gray media (not spectrally dependent) and of isotropic scattering. More complex/realistic gas radiative property models will be implemented in the future.
+Medium1D_State: contains gas state class definition for an absorbing, scattering participating medium. In particular, it stores radiative properties of the participating medium such as the absorption coefficient and the scattering coefficient. For now, the radiative properties implemented are based on the assumption of gray media (not spectrally dependent radiative properties) and of isotropic scattering. More complex/realistic gas radiative property models will be implemented in the future.
 
 Cell1D_Uniform: contains class definitions for the 1D uniform cell making up the computational domain.
 
