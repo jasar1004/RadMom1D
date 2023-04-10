@@ -38,9 +38,9 @@ solved. The current implementation involves three moment closure techniques:
       of the assumed distribution.
 
 The RadMom1D code is templated such that it can be used to solve the systems of PDEs
-arising from moment closure technique of varying order, which involve different number
-of independent variables. as an example, the M1 and P1 closures invole only two independent
-variable in 1D, whereas the P3 closure involves 4 independent variables in one spatial
+arising from moment closure techniques of varying order, which involve different number
+of independent variables. As an example, the M1 and P1 closures invole only two independent
+variables in 1D, whereas the P3 closure involves 4 independent variables in one spatial
 dimension. The type of moment closure technique to be used must be specified prior to
 compiling the RadMom1D code so as to ensure the proper specialization of the templated
 classes are compiled.
