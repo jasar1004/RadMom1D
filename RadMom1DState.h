@@ -42,7 +42,7 @@ cState FluxRoe(const pState &Wl,
 
     for (int i = 1; i <= Wl.NumVar(); i++) {
         Flux[i] = Flux_R[i] + Flux_L[i];
-        Flux[i] -= Correction_Roe[i];
+        Flux[i] -= Correction_Roe[i-1];
         Flux[i] *= HALF;
      }
 
