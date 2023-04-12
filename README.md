@@ -56,9 +56,21 @@ Copyright (C) Joachim Sarr.
 LICENSE
 -------
 
-----------
+RadMom1D is a free  software; you  can redistribute  it  and/or  modify  it
+under  the  terms of  the GNU  General  Public License as published by
+the Free  Software Foundation  (version 2 of the License, or any later
+version).  A  copy  of the  licensing  agreement is  provided in  this
+directory in  the  file  GNU_license.txt.   For additional information
+contact  the  Free  Software  Foundation Inc., 65 Mass Ave, Cambridge,
+MA 02139, USA.
+
 DISCLAIMER
 ----------
+
+This program  is distributed in the  hope that it will  be useful, but
+WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
+MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
+General Public License for more details.
 
 
 ------------
