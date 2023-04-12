@@ -68,7 +68,21 @@ CONTRIBUTORS
 Contributors to the development of RadMom1D include:
 Joachim Sarr
 
------------------------------------------------------------------------ 
+CONTACT
+-------
+
+For additional information concerning RadMom1D contact the primary author:
+
+Joachim A. R. Sarr
+University of Toronto Institute for Aerospace Studies
+4925 Dufferin Street, Toronto, Ontario
+M3H 5T6, Canada
+
+joachimandre.sarr@mail.utoronto.ca
+
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
 
 ------------------------------
 Classes:
@@ -132,4 +146,3 @@ Upon completion of the numerical simulations, an output file "test1D.dat" will b
 
 A Tecplot macro is provided in the "Test" subdirectory which extracts solution profiles for the M1, P1, and P3 closures (Comparisons_E.mcr for the radiative energy density or zeroth-order moment, Comparisons_F.mcr for the radiative heat flux or first-order moment, and Comparisons_Sr.mcr for the radiative source term) for the purpose of comparing the predictive
 capabilities of the different moment closures.
-
