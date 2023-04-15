@@ -7,7 +7,7 @@
 /* Include 1D RadMom state and cell header files. */
 
 #ifndef _RADMOM1D_STATE_INCLUDED
-#include "RadMom1DState.h"
+#include "RadMom1D_Flux_Functions.h"
 #endif // _RADMOM1D_STATE_INCLUDED
 
 #ifndef _CELL1D_INCLUDED

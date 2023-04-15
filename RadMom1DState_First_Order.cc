@@ -8,23 +8,47 @@
 // /*************************************************************
 //  * RadMom1D_pState_First_Order -- Create storage and assign gas constants.*
 //  *************************************************************/
-int RadMom1D_pState_First_Order::closure_type = MOMENT_CLOSURE_M1;
-int RadMom1D_pState_First_Order::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
-int RadMom1D_pState_First_Order::Scattering_Func = RADIATION_SCATTER_ISO;
-double RadMom1D_pState_First_Order::c = SPEED_OF_LIGHT;
-double RadMom1D_pState_First_Order::a = RADIATION_CONSTANT;
-double RadMom1D_pState_First_Order::C1 = PLANCK_CONSTANT;
+template <>
+int RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::closure_type = MOMENT_CLOSURE_M1;
+template <>
+int RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
+template <>
+int RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::Scattering_Func = RADIATION_SCATTER_ISO;
+template <>
+double RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::c = SPEED_OF_LIGHT;
+template <>
+double RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::a = RADIATION_CONSTANT;
+template <>
+double RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::C1 = PLANCK_CONSTANT;
 int         RadMom1D_pState_First_Order :: NUM_VAR_RADMOM1D_FIRST_ORDER = 0;
 
 // /*************************************************************
 //  * RadMom1D_cState -- Create storage and assign gas constants.*
 //  *************************************************************/
-int RadMom1D_cState_First_Order::closure_type = MOMENT_CLOSURE_M1;
-int RadMom1D_cState_First_Order::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
-int RadMom1D_cState_First_Order::Scattering_Func = RADIATION_SCATTER_ISO;
-double RadMom1D_cState_First_Order::c = SPEED_OF_LIGHT;
-double RadMom1D_cState_First_Order::a = RADIATION_CONSTANT;
-double RadMom1D_cState_First_Order::C1 = PLANCK_CONSTANT;
+template <>
+int RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::closure_type = MOMENT_CLOSURE_M1;
+template <>
+int RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
+template <>
+int RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::Scattering_Func = RADIATION_SCATTER_ISO;
+template <>
+double RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::c = SPEED_OF_LIGHT;
+template <>
+double RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::a = RADIATION_CONSTANT;
+template <>
+double RadMom1D_cState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::C1 = PLANCK_CONSTANT;
 int         RadMom1D_cState_First_Order :: NUM_VAR_RADMOM1D_FIRST_ORDER = 0;
 
 /*********************************************************
@@ -131,7 +155,7 @@ void RadMom1D_pState_First_Order :: AverageStates(const RadMom1D_pState_First_Or
  * interior domain given an incoming radiative intensity*
  *                                                      *
  ********************************************************/
- void RadMom1D_cState_First_Order :: Set_BCs(const double *Intensity, 
+ void RadMom1D_cState_First_Order :: Set_BCs(const double *Intensity,
                                              const double norm_dir) {
     m_values[0] = Intensity[0]*TWO*PI;
     m_values[1] = -Intensity[0]*PI;

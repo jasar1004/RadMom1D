@@ -13,7 +13,7 @@
 
 /* Include cfrte1D header files */
 #ifndef _RADMOM1D_STATE_INCLUDED
-#include "RadMom1DState.h" // Include 1D RadMom solution state header file
+#include "RadMom1D_Flux_Functions.h" // Include 1D RadMom solution state header file
 #endif // _RADMOM1D_STATE_INCLUDED
 
 /////////////////////////////////////////////////////////////////////
@@ -479,7 +479,7 @@ int RadMom1D_Input_Parameters<cState,pState>::Parse_Next_Input_Control_Parameter
         } else if (strcmp(Limiter_Type, "Venkatakrishnan") == 0) {
             i_Limiter = LIMITER_VENKATAKRISHNAN;
         } else {
-            i_Limiter = LIMITER_VANLEER ;
+            i_Limiter = LIMITER_ZERO ;
         } /* endif */
     } else if (strcmp(Next_Control_Parameter, "Flux_Function_Type") == 0) {
         i_command = 4;

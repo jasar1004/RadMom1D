@@ -39,7 +39,7 @@ Time_Accurate=
 # 1 -> for SCALAR_LOCAL_TIME_STEPPING
 ###################################################
 Local_Time_Stepping=
-0
+1
 ########################
 # Set limiter type
 #   -> Zero
