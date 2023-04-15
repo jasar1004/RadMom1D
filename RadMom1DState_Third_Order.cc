@@ -8,21 +8,47 @@
 // /*************************************************************
 //  * RadMom1D_pState_Third_Order -- Create storage and assign gas constants.*
 //  *************************************************************/
-int RadMom1D_pState_Third_Order::closure_type = MOMENT_CLOSURE_P3;
-int RadMom1D_pState_Third_Order::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
-int RadMom1D_pState_Third_Order::Scattering_Func = RADIATION_SCATTER_ISO;
-double RadMom1D_pState_Third_Order::c = SPEED_OF_LIGHT;
-double RadMom1D_pState_Third_Order::a = RADIATION_CONSTANT;
+template <>
+int RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::closure_type = MOMENT_CLOSURE_P3;
+template <>
+int RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
+template <>
+int RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::Scattering_Func = RADIATION_SCATTER_ISO;
+template <>
+double RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::c = SPEED_OF_LIGHT;
+template <>
+double RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::a = RADIATION_CONSTANT;
+template <>
+double RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::C1 = PLANCK_CONSTANT;
 int         RadMom1D_pState_Third_Order :: NUM_VAR_RADMOM1D_THIRD_ORDER = 0;
 
 // /*************************************************************
 //  * RadMom1D_cState -- Create storage and assign gas constants.*
 //  *************************************************************/
-int RadMom1D_cState_Third_Order::closure_type = MOMENT_CLOSURE_P3;
-int RadMom1D_cState_Third_Order::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
-int RadMom1D_cState_Third_Order::Scattering_Func = RADIATION_SCATTER_ISO;
-double RadMom1D_cState_Third_Order::c = SPEED_OF_LIGHT;
-double RadMom1D_cState_Third_Order::a = RADIATION_CONSTANT;
+template <>
+int RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::closure_type = MOMENT_CLOSURE_P3;
+template <>
+int RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::Absorption_Model = MEDIUM1D_ABSORB_GRAY;
+template <>
+int RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::Scattering_Func = RADIATION_SCATTER_ISO;
+template <>
+double RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::c = SPEED_OF_LIGHT;
+template <>
+double RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::a = RADIATION_CONSTANT;
+template <>
+double RadMom1D_cState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::C1 = PLANCK_CONSTANT;
 int         RadMom1D_cState_Third_Order :: NUM_VAR_RADMOM1D_THIRD_ORDER = 0;
 
 /*********************************************************

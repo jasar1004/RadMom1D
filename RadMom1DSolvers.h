@@ -37,8 +37,6 @@ int ReadInputFile(const char *Input_File_Name_ptr,
       cout.flush();
    }
 
-   cout << "What is the difference between bath_flag and error flag ?????" << endl;
-
   // return error flag
   return error_flag;
 
