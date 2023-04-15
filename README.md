@@ -104,13 +104,17 @@ RadMom1D_Input_Parameters: This class includes definition and manipulation of 1D
 
 RadMom1D_UniformMesh: contains definitions for RadMom1D computational cell (solution and geometry).
 
-RadMom1D_pState_First_Order: contains primitive variable solution state class definition for first-order moment closures (i.e, M1 and P1).
+RadMom1D_pState: base class for primitive variable solution state class.
 
-RadMom1D_cState_First_Order: contains conserved variable solution state class definition for first-order moment closures (i.e, M1 and P1).
+RadMom1D_cState: base class for conserved variable solution state class.
 
-RadMom1D_pState_Third_Order: contains primitive variable solution state class definition for third-order moment closures (i.e, P3).
+RadMom1D_pState_First_Order: contains primitive variable solution state class definition for first-order moment closures (i.e, M1 and P1). Derived class of RadMom1D_pState.
 
-RadMom1D_cState_Third_Order: contains conserved variable solution state class definition for third-order moment closures (i.e, P3).
+RadMom1D_cState_First_Order: contains conserved variable solution state class definition for first-order moment closures (i.e, M1 and P1). Derived class of RadMom1D_cState
+
+RadMom1D_pState_Third_Order: contains primitive variable solution state class definition for third-order moment closures (i.e, P3). Derived class of RadMom1D_pState.
+
+RadMom1D_cState_Third_Order: contains conserved variable solution state class definition for third-order moment closures (i.e, P3). Derived class of RadMom1D_cState.
 
 Medium1D_State: contains gas state class definition for an absorbing, scattering participating medium. In particular, it stores radiative properties of the participating medium such as the absorption coefficient and the scattering coefficient. For now, the radiative properties implemented are based on the assumption of gray media (not spectrally dependent radiative properties) and of isotropic scattering. More complex/realistic gas radiative property models will be implemented in the future.
 
