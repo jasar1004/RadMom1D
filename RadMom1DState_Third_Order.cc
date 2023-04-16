@@ -101,22 +101,26 @@ int         RadMom1D_cState_Third_Order :: NUM_VAR_RADMOM1D_THIRD_ORDER = 0;
  *                                                      *
  ********************************************************/
 void RadMom1D_pState_Third_Order :: RoeAverage(const RadMom1D_pState_Third_Order &Wl,
-                                               const RadMom1D_pState_Third_Order &Wr) {
-    RadMom1D_cState_Third_Order Ul, Ur, Ua;
-    
-    /* Determine the left and right state conservative states. */
-    Ul = Wl.U();
-    Ur = Wr.U();
-    
-    /* Determine the appropriate Roe averages. */
-    /* Linearized averages for now */
-    Ua.m_values[0] = HALF*(Ul.I0()+Ur.I0());
-    Ua.m_values[1] = HALF*(Ul.I1x()+Ur.I1x());
-    Ua.m_values[2] = HALF*(Ul.I2xx()+Ur.I2xx());
-    Ua.m_values[3] = HALF*(Ul.I3xxx()+Ur.I3xxx());
-    
+                                                const RadMom1D_pState_Third_Order &Wr) {
+    RadMom1D_pState_Third_Order Wstar;
+
+    Wstar = RadMom1D_pState<RadMom1D_cState_Third_Order,
+                            RadMom1D_pState_Third_Order>::RoeAverage(Wl, Wr);
+
     /* Return the Roe-averged state. */
-    Copy(Ua.W());
+    Copy(Wstar);
+}
+
+void RadMom1D_pState_Third_Order :: AverageStates(const RadMom1D_pState_Third_Order &Wl,
+                                                  const RadMom1D_pState_Third_Order &Wr) {
+
+    RadMom1D_pState_Third_Order Wstar;
+
+    RadMom1D_pState<RadMom1D_cState_Third_Order,
+                    RadMom1D_pState_Third_Order>::AverageStates(Wstar, Wl, Wr);
+
+    /* Return the Roe-averged state. */
+    Copy(Wstar);
 }
 
 /********************************************************

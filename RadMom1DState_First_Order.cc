@@ -90,31 +90,23 @@ void RadMom1D_cState_First_Order :: Rotate(const double &norm_dir) {
  ********************************************************/
  void RadMom1D_pState_First_Order :: RoeAverage(const RadMom1D_pState_First_Order &Wl,
                                                 const RadMom1D_pState_First_Order &Wr) {
-    RadMom1D_pState_First_Order Wl_Roe, Wr_Roe, Wstar_Roe;
-    RadMom1D_cState_First_Order Ul, Ur, Ustar;
-    
-    // Determine the left and right conserved states.
-    Ul = Wl.U();
-    Ur = Wr.U();
-    
-    Wl_Roe = U_to_W_Roe(Ul);
-    Wr_Roe = U_to_W_Roe(Ur);
-    Wstar_Roe.AverageStates(Wl_Roe, Wr_Roe);
-    
-    Ustar = W_Roe_to_U(Wstar_Roe);
-    
-    /* Return the Roe-averged state. */
-    Copy(Ustar.W());
-}
- 
-void RadMom1D_pState_First_Order :: AverageStates(const RadMom1D_pState_First_Order &Wl,
-                                                  const RadMom1D_pState_First_Order &Wr) {
-    
     RadMom1D_pState_First_Order Wstar;
 
-    Wstar[1] = HALF*(Wl.I0() + Wr.I0());
-    Wstar[2] = HALF*(Wl.N1x() + Wr.N1x());
-    
+    Wstar = RadMom1D_pState<RadMom1D_cState_First_Order,
+                            RadMom1D_pState_First_Order>::RoeAverage(Wl, Wr);
+
+    /* Return the Roe-averged state. */
+    Copy(Wstar);
+}
+
+void RadMom1D_pState_First_Order :: AverageStates(const RadMom1D_pState_First_Order &Wl,
+                                                  const RadMom1D_pState_First_Order &Wr) {
+
+    RadMom1D_pState_First_Order Wstar;
+
+    RadMom1D_pState<RadMom1D_cState_First_Order,
+                    RadMom1D_pState_First_Order>::AverageStates(Wstar, Wl, Wr);
+
     /* Return the Roe-averged state. */
     Copy(Wstar);
 }
