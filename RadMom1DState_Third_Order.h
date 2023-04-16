@@ -45,16 +45,14 @@ class RadMom1D_cState_Third_Order;
  *
  * \verbatim
  * Member functions
- *     e        -- Return radiative energy (density).
- *     f        -- Return normalized radiative flux (vector).
+ *     I0        -- Return radiative energy density (zeroth-order angular moment).
+ *     N1x       -- Return normalized radiative flux (first-order normalized angular moment).
+ *     N2xx      -- Return second-order normalized moment.
+ *     N3xxx     -- Return third-order normalized moment.
  *     fsca     -- Return absolute normalized flux (scalar).
  *     f2       -- Return square of radiative flux (scalar).
  *     xi       -- Return sqrt(4-3*fsca^2).
- *     chi      -- Return (3+4*fsca^2)/(5+2*xi).
- *     k        -- Return Boltzmann constant.
- *     h        -- Return Planck's constant.
- *     c        -- Return speed of light.
- *     a        -- Return 8*pi^5*k^4/(15*h^3*c^3).
+ *     chi      -- Return Eddington factor (3+4*fsca^2)/(5+2*xi).
  *     U        -- Return conserved solution state.
  *     Fx       -- Return x-direction solution flux.
  *     dFxdU    -- Return x-direction flux Jacobian.
@@ -158,15 +156,13 @@ public:
   
   //! Copy operator.
   void Copy(const RadMom1D_pState_Third_Order &W) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          m_values[i] = W.m_values[i];
-      }
+      RadMom1D_pState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Copy(*this, W); // *this can be passed as non-const argument here because function is non-const
   }
   
   void Copy_to_W(RadMom1D_pState_Third_Order &W) const {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          W.m_values[i] = m_values[i];
-      }
+      RadMom1D_pState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Copy_to_W(W, *this); // *this can be passed as const argument here because function is const
   }
   
   //! Set array pointers to null
@@ -174,16 +170,14 @@ public:
 
   //! Vacuum operator.
   void Vacuum(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          m_values[i] = ZERO;
-      }
+      RadMom1D_pState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Vacuum(*this);
   }
 
   //! One operator. Set the solution to ONE.
   void Ones(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          m_values[i] = ONE;
-      }
+      RadMom1D_pState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Ones(*this);
   }
   
   double I0() const {return m_values[0];}
@@ -273,6 +267,10 @@ public:
   
   void RoeAverage(const RadMom1D_pState_Third_Order &Wl,
                   const RadMom1D_pState_Third_Order &Wr);
+
+  void AverageStates(const RadMom1D_pState_Third_Order &Wl,
+                     const RadMom1D_pState_Third_Order &Wr);
+
   void Rotate(const double &norm_dir);
   void Reflect(RadMom1D_pState_Third_Order W_inner,
                const double &norm_dir);
@@ -332,6 +330,10 @@ public:
   friend ostream &operator << (ostream &out_file, const RadMom1D_pState_Third_Order &W);
   friend istream &operator >> (istream &in_file,  RadMom1D_pState_Third_Order &W);
   //@}
+
+  RadMom1D_pState_Third_Order U_to_W_Roe(const RadMom1D_cState_Third_Order &U) const;
+
+  RadMom1D_cState_Third_Order W_Roe_to_U(const RadMom1D_pState_Third_Order &W_Roe) const;
 };
 
  // end of RadMom1D_pState_Third_Order class
@@ -344,8 +346,10 @@ public:
  *
  * Conserved variable solution state class definition for radiative
  * transfer.
- *     E        -- Return radiative energy (density).
- *     F        -- Return radiative flux (vector).
+ *     I0        -- Return radiative energy density (zeroth-order angular moment).
+ *     I1x       -- Return radiative flux (first-order angular moment).
+ *     I2xx      -- Return second-order moment.
+ *     I3xxx     -- Return third-order moment.
  *     fsca     -- Return absolute normalized flux (scalar).
  *     f2       -- Return square of radiative flux (scalar).
  *     xi       -- Return sqrt(4-3*fsca^2).
@@ -446,19 +450,27 @@ public:
 
   //! Copy operator.
   void Copy(const RadMom1D_cState_Third_Order &U) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          m_values[i] = U.m_values[i];
-      }
+      RadMom1D_cState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Copy(*this, U); // *this can be passed as non-const argument here because function is non-const
   }
-  
+
+  void Copy_to_U(RadMom1D_cState_Third_Order &U) const {
+      RadMom1D_cState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Copy_to_U(U, *this); // *this can be passed as const argument here because function is const
+  }
+
   //! Set array pointers to null
   void Nullify();
 
   //! Vacuum operator.
   void Vacuum(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_THIRD_ORDER; i++ ){
-          m_values[i] = ZERO;
-      }
+      RadMom1D_cState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Vacuum(*this);
+  }
+  //! Ones operator.
+  void Ones(void) {
+      RadMom1D_cState<RadMom1D_cState_Third_Order,
+                      RadMom1D_pState_Third_Order>::Ones(*this);
   }
   
   double I0() const {return m_values[0];}
@@ -1299,6 +1311,17 @@ inline void RadMom1D_pState_Third_Order::lc(Eigenstructure_P3 &Eig_P3) const {
 
 inline void lc(const RadMom1D_pState_Third_Order &W, Eigenstructure_P3 &Eig_P3) {
     W.lc(Eig_P3);
+}
+
+
+inline RadMom1D_pState_Third_Order RadMom1D_pState_Third_Order :: U_to_W_Roe(const RadMom1D_cState_Third_Order &U) const {
+    return RadMom1D_pState<RadMom1D_cState_Third_Order,
+                            RadMom1D_pState_Third_Order>::U_to_W_Roe(U);
+}
+
+inline RadMom1D_cState_Third_Order RadMom1D_pState_Third_Order :: W_Roe_to_U(const RadMom1D_pState_Third_Order &W_Roe) const {
+    return RadMom1D_pState<RadMom1D_cState_Third_Order,
+                            RadMom1D_pState_Third_Order>::W_Roe_to_U(W_Roe);
 }
 
 //******************************************************************************

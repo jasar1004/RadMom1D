@@ -70,16 +70,12 @@ class RadMom1D_pState_First_Order;
  *
  * \verbatim
  * Member functions
- *     e        -- Return radiative energy (density).
- *     f        -- Return normalized radiative flux (vector).
+ *     I0        -- Return radiative energy (density).
+ *     N1x        -- Return normalized radiative flux (vector).
  *     fsca     -- Return absolute normalized flux (scalar).
  *     f2       -- Return square of radiative flux (scalar).
  *     xi       -- Return sqrt(4-3*fsca^2).
- *     chi      -- Return (3+4*fsca^2)/(5+2*xi).
- *     k        -- Return Boltzmann constant.
- *     h        -- Return Planck's constant.
- *     c        -- Return speed of light.
- *     a        -- Return 8*pi^5*k^4/(15*h^3*c^3).
+ *     chi      -- Return Eddington factor (3+4*fsca^2)/(5+2*xi).
  *     U        -- Return conserved solution state.
  *     Fx       -- Return x-direction solution flux.
  *     dFxdU    -- Return x-direction flux Jacobian.
@@ -114,7 +110,7 @@ class RadMom1D_pState_First_Order;
  */
 class RadMom1D_pState_First_Order : public RadMom1D_pState<RadMom1D_cState_First_Order, RadMom1D_pState_First_Order> {
 protected:
-  
+
 private:
 public:
   #ifdef STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER
@@ -178,15 +174,13 @@ public:
   
   //! Copy operator.
   void Copy(const RadMom1D_pState_First_Order &W) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           m_values[i] = W.m_values[i];
-      }
+      RadMom1D_pState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Copy(*this, W); // *this can be passed as non-const argument here because function is non-const
   }
 
   void Copy_to_W(RadMom1D_pState_First_Order &W) const {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           W.m_values[i] = m_values[i];
-      }
+      RadMom1D_pState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Copy_to_W(W, *this); // *this can be passed as const argument here because function is const
   }
 
   //! Set array pointers to null
@@ -194,15 +188,13 @@ public:
   
   //! Vacuum operator.
   void Vacuum(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           m_values[i] = ZERO;
-      }
+      RadMom1D_pState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Vacuum(*this);
   }
   //! Ones operator.
   void Ones(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           m_values[i] = ONE;
-      }
+      RadMom1D_pState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Ones(*this);
   }
   
   double I0(void) const {return m_values[0];}
@@ -232,7 +224,7 @@ public:
   double chi(void) const;
   
   //@{ Routines for computations of the interpolative-based approximations of the 
-  // Eddingtong factor for the non-gray M1 closure obeying Bose-Einstein statistics
+  // Eddington factor for the non-gray M1 closure obeying Bose-Einstein statistics
   void Evaluate_Chi2_derivatives_Gray(double &E_dChi2_dE, double &dChi2_df) const;
   void Evaluate_Chi2_derivatives(double &E_dChi2_dE, double &dChi2_df) const;
   //@} 
@@ -386,18 +378,13 @@ public:
  *
  * \verbatim
  * Member functions
- *     E        -- Return radiative energy (density).
- *     F        -- Return radiative flux (vector).
+ *     I0        -- Return radiative energy (density).
+ *     I1x        -- Return radiative flux (vector).
  *     fsca     -- Return absolute normalized flux (scalar).
  *     f2       -- Return square of radiative flux (scalar).
  *     xi       -- Return sqrt(4-3*fsca^2).
  *     chi      -- Return (3+4*fsca^2)/(5+2*xi).
- *     k        -- Return Boltzmann constant.
- *     h        -- Return Planck's constant.
- *     c        -- Return speed of light.
- *     a        -- Return 8*pi^5*k^4/(15*h^3*c^3).
  *     W        -- Return primitive solution state.
- *     Flux     -- Return x-direction solution flux.
  *     Fx       -- Return x-direction solution flux.
  *     dFxdU    -- Return x-direction flux Jacobian.
  *     S        -- Return source term vector.
@@ -425,14 +412,14 @@ public:
  * cin  >> U; (input function)
  * \endverbatim
  */
-class RadMom1D_cState_First_Order : public RadMom1D_cState<class RadMom1D_cState_First_Order, class RadMom1D_pState_First_Order> {
+class RadMom1D_cState_First_Order : public RadMom1D_cState<RadMom1D_cState_First_Order, RadMom1D_pState_First_Order> {
 protected:
 private:
 public:
-  
+
   #ifdef STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER
   double  m_values[STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER];
-  #else 
+  #else
   double* m_values;
   #endif
 
@@ -487,15 +474,13 @@ public:
 
   //! Copy operator.
   void Copy(const RadMom1D_cState_First_Order &U) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-          m_values[i] = U.m_values[i];
-      }
+      RadMom1D_cState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Copy(*this, U); // *this can be passed as non-const argument here because function is non-const
   }
 
   void Copy_to_U(RadMom1D_cState_First_Order &U) const {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           U.m_values[i] = m_values[i];
-      }
+      RadMom1D_cState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Copy_to_U(U, *this); // *this can be passed as const argument here because function is const
   }
 
   //! Set array pointers to null
@@ -503,15 +488,13 @@ public:
 
   //! Vacuum operator.
   void Vacuum(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           m_values[i] = ZERO;
-      }
+      RadMom1D_cState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Vacuum(*this);
   }
   //! Ones operator.
   void Ones(void) {
-      for ( int i = 0; i < STATIC_NUM_VAR_RADMOM1D_FIRST_ORDER; i++ ){
-           m_values[i] = ONE;
-      }
+      RadMom1D_cState<RadMom1D_cState_First_Order,
+                      RadMom1D_pState_First_Order>::Ones(*this);
   }
   
   double I0(void) const {return m_values[0];}
@@ -1328,21 +1311,13 @@ inline void RadMom1D_pState_First_Order :: Setup_Eigenstructure_M1(Eigenstructur
 }
 
 inline RadMom1D_pState_First_Order RadMom1D_pState_First_Order :: U_to_W_Roe(const RadMom1D_cState_First_Order &U) const {
-    RadMom1D_pState_First_Order W_Roe;
-
-    W_Roe[1] = sqrt(U.I0());
-    W_Roe[2] = U.I1x()/sqrt(U.I0());
-
-    return W_Roe;
+    return RadMom1D_pState<RadMom1D_cState_First_Order,
+                            RadMom1D_pState_First_Order>::U_to_W_Roe(U);
 }
 
 inline RadMom1D_cState_First_Order RadMom1D_pState_First_Order :: W_Roe_to_U(const RadMom1D_pState_First_Order &W_Roe) const {
-    RadMom1D_cState_First_Order U;
-
-    U[1] = pow(W_Roe.I0(), 2);
-    U[2] = W_Roe.I0()*W_Roe.N1x();
-
-    return U;
+    return RadMom1D_pState<RadMom1D_cState_First_Order,
+                            RadMom1D_pState_First_Order>::W_Roe_to_U(W_Roe);
 }
 
 inline void RadMom1D_pState_First_Order :: Approximate_Roe_Matrix(Eigenstructure_M1 &Eig_M1,
@@ -1428,7 +1403,7 @@ inline void RadMom1D_pState_First_Order :: Compute_Correction_Factor_Approximate
 }
 
 //******************************************************************************
-//RadMom1D_pState_First_Order::rc -- Conserved right eigenvector (x-direction).                 
+//RadMom1D_pState_First_Order::rc -- Conserved right eigenvector (x-direction).
 //******************************************************************************
 inline void RadMom1D_pState_First_Order::rc(Eigenstructure_M1 &Eig_M1) const {
     // Find the vector rc such that: A rc = \lam_i rc
@@ -1478,7 +1453,7 @@ inline void rc(const RadMom1D_pState_First_Order &W, Eigenstructure_M1 &Eig_M1) 
 }
 
 //******************************************************************************
-//RadMom1D_pState_First_Order::rc -- Conserved left eigenvector (x-direction).                 
+//RadMom1D_pState_First_Order::rc -- Conserved left eigenvector (x-direction).
 //******************************************************************************
 inline void RadMom1D_pState_First_Order::lc(Eigenstructure_M1 &Eig_M1) const {
     double deter;
@@ -1538,8 +1513,8 @@ inline double RadMom1D_cState_First_Order::Sr(const Medium1D_State &M ) const {
 /*****************************************************************
  * First order piecewise linear solution reconstruction
  ******************************************************************/
-inline void RadMom1D_pState_First_Order::Reconstruct( const RadMom1D_pState_First_Order &Wc, 
-                                                      const RadMom1D_pState_First_Order &phi, 
+inline void RadMom1D_pState_First_Order::Reconstruct( const RadMom1D_pState_First_Order &Wc,
+                                                      const RadMom1D_pState_First_Order &phi,
                                                       const RadMom1D_pState_First_Order &dWdx,
                                                       const double &dX) {
     Solution_Reconstruct( *this, Wc, phi, dWdx, dX);

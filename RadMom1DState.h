@@ -46,12 +46,12 @@ class RadMom1D_pState;
  *
  * \verbatim
  * Member functions
- *     k        -- Return Boltzmann constant.
- *     h        -- Return Planck's constant.
- *     c        -- Return speed of light.
- *     sig      -- Return addition of absorption and scattering coefficients.
- *     a        -- Return 8*pi^5*k^4/(15*h^3*c^3).
- *     Sr        -- Return source term.
+ *     closure_type        -- moment closure type for solving the radiative transfer equation.
+ *     Absorption_Model    -- absorption model for the absorption coefficient.
+ *     Scattering_Func     -- model for scattering phase function.
+ *     C1                  -- Return Planck constant
+ *     a                   -- Return blackbody source constant 8*pi^5*k^4/(15*h^3*c^3).
+ *     Sr                  -- Return source term.
  *
  * Member operators
  *      W -- a primitive solution state
@@ -104,33 +104,29 @@ public:
   //@}
 
   //! Copy operator.
-  pState Copy(const pState &W) {
-      pState W_temp;
-      for ( int i = 0; i < W.NumVar(); i++ ){
-           W_temp.m_values[i] = W.m_values[i];
-      }
-      return W_temp;
-  }
-
-  void Copy_to_W(pState &W_copy, const pState &W) {
-      for ( int i = 0; i < W.NumVar(); i++ ){
-           W_copy.m_values[i] = W.m_values[i];
+  void Copy(pState &W_this, const pState &W) {
+      for ( int i = 1; i <= W.NumVar(); i++ ){
+           W_this[i] = W[i];
       }
   }
 
-  //! Set array pointers to null
-  void Nullify(pState &W);
+  void Copy_to_W(pState &W_copy, const pState &W) const {
+      // Must be const because called by const member function in derived class
+      for ( int i = 1; i <= W.NumVar(); i++ ){
+           W_copy[i] = W[i];
+      }
+  }
 
   //! Vacuum operator.
   void Vacuum(pState &W) {
-      for ( int i = 0; i < W.NumVar(); i++ ){
-           W.m_values[i] = ZERO;
+      for ( int i = 1; i <= W.NumVar(); i++ ){
+           W[i] = ZERO;
       }
   }
   //! Ones operator.
   void Ones(pState &W) {
-      for ( int i = 0; i < W.NumVar(); i++ ){
-           W.m_values[i] = ONE;
+      for ( int i = 1; i <= W.NumVar(); i++ ){
+           W[i] = ONE;
       }
   }
 
@@ -202,6 +198,9 @@ public:
 
   cState W_Roe_to_U(const pState &W_Roe) const;
 
+  void AverageStates(pState &Wstar, const pState &Wl, const pState &Wr);
+  pState RoeAverage(const pState &Wl, const pState &Wr);
+
 };
 
  // end of RadMom1D_pState class
@@ -213,12 +212,12 @@ public:
  *
  * \verbatim
  * Member functions
- *     k        -- Return Boltzmann constant.
- *     h        -- Return Planck's constant.
- *     c        -- Return speed of light.
- *     sig      -- Return addition of absorption and scattering coefficients.
- *     a        -- Return 8*pi^5*k^4/(15*h^3*c^3).
- *     Sr        -- Return radiative source term.
+ *     closure_type        -- moment closure type for solving the radiative transfer equation.
+ *     Absorption_Model    -- absorption model for the absorption coefficient.
+ *     Scattering_Func     -- model for scattering phase function.
+ *     C1                  -- Return Planck constant
+ *     a                   -- Return blackbody source constant 8*pi^5*k^4/(15*h^3*c^3).
+ *     Sr                  -- Return source term.
  * Member operators
  *      U -- a primitive solution state
  *      b -- a scalar (double)
@@ -267,33 +266,28 @@ public:
   //@}
 
   //! Copy operator.
-  cState Copy(const cState &U) {
-      cState U_temp;
-      for ( int i = 0; i < U.NumVar(); i++ ){
-          U_temp.m_values[i] = U.m_values[i];
+  void Copy(cState &U_this, const cState &U) {
+      for ( int i = 1; i <= U.NumVar(); i++ ){
+          U_this[i] = U[i];
       }
-      return U_temp;
   }
 
   void Copy_to_U(cState &U_copied, const cState &U) const {
-      for ( int i = 0; i < U.NumVar(); i++ ){
-           U_copied.m_values[i] = U.m_values[i];
+      for ( int i = 1; i <= U.NumVar(); i++ ){
+           U_copied[i] = U[i];
       }
   }
 
-  //! Set array pointers to null
-  void Nullify(pState &W);
-
   //! Vacuum operator.
   void Vacuum(cState &U) {
-      for ( int i = 0; i < U.NumVar(); i++ ){
-           U.m_values[i] = ZERO;
+      for ( int i = 1; i <= U.NumVar(); i++ ){
+           U[i] = ZERO;
       }
   }
   //! Ones operator.
   void Ones(cState &U) {
-      for ( int i = 0; i < U.NumVar(); i++ ){
-           U.m_values[i] = ONE;
+      for ( int i = 1; i <= U.NumVar(); i++ ){
+           U[i] = ONE;
       }
   }
 
@@ -395,8 +389,8 @@ template<class cState, class pState>
 inline double RadMom1D_pState<cState, pState> :: multiplication(pState &W1, const pState &W2) {
   double sum=0.0;
 
-  for ( int i = 0; i < W1.NumVar(); i++ ) {
-    sum += W1.m_values[i]*W2.m_values[i];
+  for ( int i = 1; i <= W1.NumVar(); i++ ) {
+    sum += W1[i]*W2[i];
   }
   return sum;
 }
@@ -420,43 +414,43 @@ inline void RadMom1D_pState<cState, pState> :: equals(pState &W_this, const pSta
  ********************************************************************/
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState> :: plus_equal(pState &W_this, const pState &W2) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] += W2.m_values[i];
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] += W2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState> :: minus_equal(pState &W_this, const pState &W2) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] -= W2.m_values[i];
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] -= W2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState>::times_equal(pState &W_this, const double &b) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] *= b;
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] *= b;
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState>::times_equal(pState &W_this, const pState &W2) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] *= W2.m_values[i];
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] *= W2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState>::divide_equal(pState &W_this, const double &b) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] /= b;
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] /= b;
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_pState<cState, pState>::divide_equal(pState &W_this, const pState &W2) {
-    for ( int i = 0; i < W_this.NumVar(); i++ ) {
-        W_this.m_values[i] /= W2.m_values[i];
+    for ( int i = 1; i <= W_this.NumVar(); i++ ) {
+        W_this[i] /= W2[i];
     }
 }
 
@@ -503,8 +497,8 @@ template<class cState, class pState>
 inline double RadMom1D_cState<cState, pState> :: multiplication(cState &U1, const cState &U2) {
   double sum=0.0;
 
-  for ( int i = 0; i < U1.NumVar(); i++ ) {
-    sum += U1.m_values[i]*U2.m_values[i];
+  for ( int i = 1; i <= U1.NumVar(); i++ ) {
+    sum += U1[i]*U2[i];
   }
   return sum;
 }
@@ -528,43 +522,43 @@ inline void RadMom1D_cState<cState, pState> :: equals(cState &U_this, const cSta
  ********************************************************************/
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState> :: plus_equal(cState &U_this, const cState &U2) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] += U2.m_values[i];
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] += U2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState> :: minus_equal(cState &U_this, const cState &U2) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] -= U2.m_values[i];
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] -= U2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState>::times_equal(cState &U_this, const double &b) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] *= b;
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] *= b;
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState>::times_equal(cState &U_this, const cState &U2) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] *= U2.m_values[i];
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] *= U2[i];
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState>::divide_equal(cState &U_this, const double &b) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] /= b;
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] /= b;
     }
 }
 
 template<class cState, class pState>
 inline void RadMom1D_cState<cState, pState>::divide_equal(cState &U_this, const cState &U2) {
-    for ( int i = 0; i < U_this.NumVar(); i++ ) {
-        U_this.m_values[i] /= U2.m_values[i];
+    for ( int i = 1; i <= U_this.NumVar(); i++ ) {
+        U_this[i] /= U2[i];
     }
 }
 
@@ -693,10 +687,10 @@ inline double RadMom1D_pState<cState, pState> :: U_from_W(const pState &W, const
     double U_val;
     switch (index_U) {
         case 1:
-            U_val = W.m_values[0];
+            U_val = W[1];
             break;
         case 2:
-            U_val = W.m_values[0]*W.m_values[index_U-1];
+            U_val = W[1]*W[index_U];
             break;
         default:
             cout << "Incorrect value for index_U = " << index_U << endl;
@@ -711,9 +705,9 @@ template<class cState, class pState>
 inline cState RadMom1D_pState<cState, pState>::U_from_W(const pState &W) const {
     cState U_temp;
 
-    U_temp[1] = W.m_values[0];
-    for (int  i = 1; i < W.NumVar(); i++) {
-        U_temp[i+1] = W.m_values[0]*W.m_values[i];
+    U_temp[1] = W[1];
+    for (int  i = 2; i <= W.NumVar(); i++) {
+        U_temp[i] = W[1]*W[i];
     }
 
     return U_temp;
@@ -730,9 +724,9 @@ inline cState U(const pState &W) {
 template<class cState, class pState>
 inline pState RadMom1D_cState<cState, pState>::W_from_U(const cState &U) const {
     pState W_temp;
-    W_temp[1] = U.m_values[0];
-    for (int  i = 1; i < U.NumVar(); i++) {
-        W_temp[i+1] = U.m_values[i]/U.m_values[0];
+    W_temp[1] = U[1];
+    for (int  i = 2; i <= U.NumVar(); i++) {
+        W_temp[i] = U[i]/U[1];
     }
     return W_temp;
 }
@@ -740,6 +734,77 @@ inline pState RadMom1D_cState<cState, pState>::W_from_U(const cState &U) const {
 template<class cState, class pState>
 inline pState W(const cState &U) {
     return U.W();
+}
+
+/********************************************************
+ * RadMom1D_pState::U_to_W_Roe
+ * This routine allows to compute parameter vector in
+ * primitive form, used for computing the Roe Matrix
+ ********************************************************/
+template<class cState, class pState>
+inline pState RadMom1D_pState<cState, pState> :: U_to_W_Roe(const cState &U) const {
+    pState W_Roe;
+
+    W_Roe[1] = sqrt(U[1]);
+    for (int i = 2; i <= U.NumVar(); i++) {
+        W_Roe[i] = U[i]/sqrt(U[1]);
+    }
+
+    return W_Roe;
+}
+
+/********************************************************
+ * RadMom1D_pState::W_Roe_to_U
+ * This routine allows to compute parameter vector in
+ * conserved form, used for computing the Roe Matrix
+ ********************************************************/
+template<class cState, class pState>
+inline cState RadMom1D_pState<cState, pState> :: W_Roe_to_U(const pState &W_Roe) const {
+    cState U;
+
+    U[1] = pow(W_Roe[1], 2);
+    for (int i = 2; i <= W_Roe.NumVar(); i++) {
+        U[i] = W_Roe[1]*W_Roe[i];
+    }
+
+    return U;
+}
+
+/********************************************************
+ * Routine: RoeAverage (Roe Averages)                   *
+ *                                                      *
+ * This function returns the Roe-averaged (linearized)  *
+ * primitive solution state given left and right        *
+ * primitive solution variables.                        *
+ *                                                      *
+ ********************************************************/
+template<class cState, class pState>
+pState RadMom1D_pState<cState, pState> :: RoeAverage(const pState &Wl,
+                                                     const pState &Wr) {
+    pState Wl_Roe, Wr_Roe, Wstar_Roe;
+    cState Ul, Ur, Ustar;
+
+    // Determine the left and right conserved states.
+    Ul = Wl.U();
+    Ur = Wr.U();
+
+    Wl_Roe = U_to_W_Roe(Ul);
+    Wr_Roe = U_to_W_Roe(Ur);
+    AverageStates(Wstar_Roe, Wl_Roe, Wr_Roe);
+
+    Ustar = W_Roe_to_U(Wstar_Roe);
+
+    /* Return the Roe-averged state. */
+    return Ustar.W();
+}
+
+template<class cState, class pState>
+void RadMom1D_pState<cState, pState> :: AverageStates(pState &Wstar,
+                                                      const pState &Wl,
+                                                      const pState &Wr) {
+    for (int i = 1; i <= Wstar.NumVar(); i++) {
+        Wstar[i] = HALF*(Wl[i] + Wr[i]);
+    }
 }
 
 /**********************************************************************
@@ -764,8 +829,8 @@ inline void RadMom1D_pState<cState, pState>::Solution_Reconstruct( pState &Wreco
                                                           const pState &phi,
                                                           const pState &dWdx,
                                                           const double &dX) {
-    for (int  i = 0; i < Wc.NumVar(); i++) {
-        Wrecon.m_values[i] = Wc.m_values[i] + phi.m_values[i]*dWdx.m_values[i]*dX;
+    for (int  i = 1; i <= Wc.NumVar(); i++) {
+        Wrecon[i] = Wc[i] + phi[i]*dWdx[i]*dX;
     }
 }
 #endif /* _RADMOM1D_STATE_INCLUDED  */
