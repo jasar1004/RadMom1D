@@ -30,9 +30,9 @@ int ReadInputFile(const char *Input_File_Name_ptr,
    }
 
    error_flag = IP.Process_Input_Control_Parameter_File(Input_File_Name_ptr,
-                                                                      command_flag);
+                                                        command_flag);
 
-   if (!command_flag && error_flag == 0) {
+   if (!error_flag) {
       cout << IP << "\n";
       cout.flush();
    }

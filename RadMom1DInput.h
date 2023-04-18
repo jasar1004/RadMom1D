@@ -272,7 +272,7 @@ inline ostream &operator << (ostream &out_file,
             out_file << "\n     Scattering Cefficient (m^-1) = " << IP.ScatteringCoef;
             break;
         default:
-            out_file << "\n     Width (m) = " << IP.Box_Width;
+
             break;
     } // endswitch
 
@@ -405,10 +405,10 @@ void RadMom1D_Input_Parameters<cState,pState>::Get_Next_Input_Control_Parameter(
         // if getline does not find a delimiter before size-1
         // characters then it sets the ifstream state to not
         // good.
-        Input_File.clear(); 
+        Input_File.clear(); // clear error message from previous call of getline
         
-        Input_File.ignore(10000, '\n');
-        if (buffer[0] != '#') {
+        Input_File.ignore(10000, '\n'); // skip up to 10000 characters or next newline
+        if (buffer[0] != '#') { // check to make sure it is not commented code
             cout << "\n***\n\nWarning: input file line " << Line_Number;
             cout << ": Line is more than " << sizeof(buffer) << " characters long. ";
             cout << "Ignoring rest of line.";
@@ -417,7 +417,7 @@ void RadMom1D_Input_Parameters<cState,pState>::Get_Next_Input_Control_Parameter(
     }
     
     i = 0;
-    if (buffer[0] != '#') {
+    if (buffer[0] != '#') { // check to make sure it is not commented code
         while (1) {
             if (buffer[i] == ' ' || buffer[i] == '=' ) break;
             i = i + 1;
@@ -932,9 +932,13 @@ int RadMom1D_Input_Parameters<cState,pState>::Process_Input_Control_Parameter_Fi
 
     /* Read and parse control parameters contained in the input file. */
     while (1) {
+        // Get next input control parameter
         Get_Next_Input_Control_Parameter();
+        // Set value of next input control parameter
         Command_Flag = Parse_Next_Input_Control_Parameter();
         line_number = Line_Number;
+        // Check to see if Command_Flag is not EXECUTE_CODE or TERMINATE_CODE
+        // or INVALID_INPUT_CODE or INVALID_INPUT_VALUE
         if (Command_Flag == EXECUTE_CODE) {
             // Setup conserved and medium state
             SetupInputState();

@@ -89,6 +89,7 @@ void RadMom1D_Input_Parameters<RadMom1D_cState_First_Order,RadMom1D_pState_First
     Number_of_Ghost_Cells = 2;
     Number_of_Blocks_Idir = 1;
     Number_of_Blocks = 1;
+    Number_of_Processors = 1;
 
     // Boundary conditions:
     strcpy(Boundary_Conditions_Specified,"OFF");
@@ -120,8 +121,6 @@ void RadMom1D_Input_Parameters<RadMom1D_cState_First_Order,RadMom1D_pState_First
     strcpy(Next_Control_Parameter, " ");
 
     Line_Number = 0;
-
-    // Number_of_Blocks_Per_Processor = 10;
 
     // Freezing_Limiter
     Freeze_Limiter = 0;
