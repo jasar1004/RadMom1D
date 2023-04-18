@@ -86,6 +86,7 @@ void RadMom1D_Input_Parameters<RadMom1D_cState_Third_Order,RadMom1D_pState_Third
     Number_of_Ghost_Cells = 2;
     Number_of_Blocks_Idir = 1;
     Number_of_Blocks = 1;
+    Number_of_Processors = 1;
 
     // Boundary conditions:
     strcpy(Boundary_Conditions_Specified,"OFF");
